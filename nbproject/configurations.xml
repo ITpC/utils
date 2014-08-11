@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="80">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="include" displayName="include" projectFiles="true">
+        <logicalFolder name="abstract" displayName="abstract" projectFiles="true">
+          <itemPath>include/abstract/ILogFormatter.h</itemPath>
+          <itemPath>include/abstract/LoggerHelpers.h</itemPath>
+        </logicalFolder>
+        <itemPath>include/HString.h</itemPath>
+        <itemPath>include/InterfaceCheck.h</itemPath>
+        <itemPath>include/Log.h</itemPath>
+        <itemPath>include/Logger.h</itemPath>
+        <itemPath>include/PString.h</itemPath>
+        <itemPath>include/Properties.h</itemPath>
+        <itemPath>include/RangedNumber.h</itemPath>
+        <itemPath>include/StringTokenizer.h</itemPath>
+        <itemPath>include/URI.h</itemPath>
+        <itemPath>include/Val2Type.h</itemPath>
+        <itemPath>include/bdmap.h</itemPath>
+        <itemPath>include/compat_types.h</itemPath>
+        <itemPath>include/missing.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>utils-Makefile.mk</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>utils-Makefile.mk</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>GNU|GNU</compilerSet>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <commandLine>-pipe -pthread -D_REENTRANT -D_THREAD_SAFE -O2 -march=native -mtune=native -fomit-frame-pointer -mfpmath=sse -ftree-vectorize -funroll-loops -mno-tls-direct-seg-refs -DBZ_NO_STDIO -DLOG_DEBUG -DMAX_BUFF_SIZE=256 -DTSAFE_LOG=1 -std=c++0x</commandLine>
+        </ccTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>GNU|GNU</compilerSet>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <commandLine>-pipe -pthread -D_REENTRANT -D_THREAD_SAFE -O2 -march=native -mtune=native -fomit-frame-pointer -mfpmath=sse -ftree-vectorize -funroll-loops -mno-tls-direct-seg-refs -DBZ_NO_STDIO -DLOG_ERROR -DMAX_BUFF_SIZE=256 -DTSAFE_LOG=1 -std=c++0x -DNDEBUG=1</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>
