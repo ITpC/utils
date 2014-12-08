@@ -26,19 +26,19 @@ struct second {
 };
 
 template<typename FirstType, typename SecondType>
-struct bdmap {
+  struct bdmap {
     typedef std::pair<FirstType, SecondType> value_type;
-
     typedef multi_index_container<
-            value_type,
-            indexed_by<
-            ordered_unique<
-            tag<first>, member<value_type, FirstType, &value_type::first> >,
-            ordered_unique<
-            tag<second>, member<value_type, SecondType, &value_type::second> >
-            >
-            > type;
-};
+      value_type,
+      indexed_by<
+        ordered_unique<
+          tag<first>, member<value_type, FirstType, &value_type::first>
+        >,
+        ordered_unique<
+          tag<second>, member<value_type, SecondType, &value_type::second> >
+        >
+      > type;
+  };
 
 
 #endif /*BDMAP_H_*/

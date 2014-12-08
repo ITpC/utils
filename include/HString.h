@@ -33,7 +33,7 @@
 #define __H_STRING_H__
 
 #include <string>
-#include <boost/functional/hash.hpp>
+#include <functional>
 
 namespace itc
 {
@@ -53,11 +53,13 @@ namespace itc
          * 
          * As far as TR1 standard would be implemented in most popular compilers
          * header reference should change from boost to TR1.
+         *
+         * changed to c++11 on 03.12.2014
          * 
          **/
         struct HString
         {
-            boost::hash<std::string> str2hash;
+            std::hash<std::string> str2hash;
             std::string mHString;
             size_t      mHash;
             

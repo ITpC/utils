@@ -36,7 +36,7 @@
 #include <string>
 #include <sstream>
 #include <ctype.h>
-#include <boost/regex.hpp>
+#include <regex>
 #include <exception>
 #include <stdexcept>
 #include <boost/shared_ptr.hpp>
@@ -44,26 +44,11 @@
 
 namespace itc {
     namespace utils {
-        /**
-         * hash algorithm from gcc 2.95 set of C++ headers
-
-        static inline size_t str2hash(const std::string& str )
-        {
-            register size_t hash=0;
-            register char* p=(char*)str.c_str();
-            do
-            {
-                hash=hash*5+(*p);
-            }while(*(++p));
-            hash<<=hash%3;
-            return hash;
-        }
-         **/
-
-
-
 
         //minimizes copieng, preallocate necessary heap at once.
+        //Do not iuse this function in your projects. This is a historical
+        //artifact, and stays here for compatibility with older projects.
+        //This function is deprecated, and will be obsolet soon.
         static inline boost::shared_array<char> toUpper(const std::string& ref) {
             std::string::size_type len = ref.length();
             boost::shared_array<char> mArray(new char[len + 1]);
@@ -77,6 +62,9 @@ namespace itc {
         }
 
         //minimizes copieng, preallocate necessary heap at once.
+        //Do not iuse this function in your projects. This is a historical
+        //artifact, and stays here for compatibility with older projects.
+        //This function is deprecated, and will be obsolet soon.
         static inline boost::shared_array<char> toLower(const std::string& ref) {
             std::string::size_type len = ref.length();
             boost::shared_array<char> mArray(new char[len + 1]);
@@ -89,13 +77,13 @@ namespace itc {
             return mArray;
         }
 
-        const boost::regex aNumRegEx(
+        const std::regex aNumRegEx(
                 std::string("^[-]?[0-9]*[[:dot:]]?[0-9]+([eE][+-][0-9]+)?$"),
-                boost::regex::egrep
+                std::regex::egrep
         );
 
         static inline const bool isnumber(const std::string& str) {
-            if (boost::regex_match(str, aNumRegEx)) {
+            if (std::regex_match(str, aNumRegEx)) {
                 return true;
             }
             return false;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="80">
+<configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -42,8 +42,9 @@
   <confs>
     <conf name="Debug" type="3">
       <toolsSet>
-        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
         <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <ccTool>
@@ -52,11 +53,42 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="include/HString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Log.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Logger.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Properties.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/StringTokenizer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/URI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/abstract/ILogFormatter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/abstract/LoggerHelpers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/bdmap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/compat_types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/missing.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="3">
       <toolsSet>
-        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
         <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <cTool>
@@ -72,6 +104,36 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="include/HString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Log.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Logger.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Properties.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/StringTokenizer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/URI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/abstract/ILogFormatter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/abstract/LoggerHelpers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/bdmap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/compat_types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/missing.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
   </confs>
 </configurationDescriptor>

@@ -35,6 +35,7 @@
 #include <compat_types.h>
 #include <string>
 #include <missing.h>
+#include <functional>
 
 
 namespace itc {
@@ -47,7 +48,7 @@ namespace itc {
          * just to be compatible with C strings. Common use case - part of the record of some binary file.
          * No endian checks ! HW-platform dependent ! Only to store some temp platform-untransportable data.
          * Good compromise of memory consumption and performance. However the behavior of comarison operators
-         * is to compare the hashes of the string. So one could check really fast is one string equals or not
+         * is to compare the hashes of the string. So one could check really fast if one string equals or not
          * to another one. Operator < and > also comparing the hashes. To compare lexographically one must use
          * methods less and greater.
          *
@@ -62,7 +63,7 @@ namespace itc {
             uint32_t mHash;
 
             inline void mkHash() {
-                boost::hash<std::string> str2hash;
+                std::hash<std::string> str2hash;
                 mHash = str2hash(mString);
             }
 

@@ -42,7 +42,7 @@
 
 #include <exception>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <InterfaceCheck.h>
 #include <abstract/LoggerHelpers.h>
