@@ -36,7 +36,7 @@
 #include <string>
 #include <sstream>
 #include <ctype.h>
-#include <regex>
+#include <boost/regex.hpp>
 #include <exception>
 #include <stdexcept>
 #include <boost/shared_ptr.hpp>
@@ -77,18 +77,47 @@ namespace itc {
             return mArray;
         }
 
-        const std::regex aNumRegEx(
-                std::string("^[-]?[0-9]*[[:dot:]]?[0-9]+([eE][+-][0-9]+)?$"),
-                std::regex::egrep
+        // boost::regex has a bug with following regex in 4.8.3. An exception will
+        // be trown on application start. Repaced back with boost::regex 11.12.2014
+        const boost::regex aNumRegEx(
+                std::string("^[-]?[0-9]*[.]?[0-9]+([eE][+-][0-9]+)?$"),
+                boost::regex::egrep
         );
 
-        static inline const bool isnumber(const std::string& str) {
-            if (std::regex_match(str, aNumRegEx)) {
+        const boost::regex anIntRegEx(
+                std::string("^[-]?[0-9]*$"),
+                boost::regex::egrep
+        );
+
+        const boost::regex aHexRegEx(
+                std::string("^[0-9a-fA-F]*$"),
+                boost::regex::egrep
+        );
+        
+        static inline const bool isnumber(const std::string& str) 
+        {
+            if (boost::regex_match(str, aNumRegEx)) {
                 return true;
             }
             return false;
         }
 
+        static inline const bool ishex(const std::string& str) 
+        {
+            if (boost::regex_match(str, aHexRegEx)) {
+                return true;
+            }
+            return false;
+        }
+
+        static inline const bool isint(const std::string& str) 
+        {
+            if (boost::regex_match(str, anIntRegEx)) {
+                return true;
+            }
+            return false;
+        }
+        
         static inline double s2double(const std::string& ref) {
             std::istringstream aConverter(ref);
             double ret;
@@ -124,6 +153,14 @@ namespace itc {
             return ret;
         }
 
+        template <typename T> T str2number(const std::string& ref)
+        {
+            std::istringstream aConverter(ref);
+            T ret;
+            aConverter >> ret;
+            return ret;            
+        }
+        
         static inline long long s2dlong(const std::string& ref) {
             std::istringstream aConverter(ref);
             long long ret;
