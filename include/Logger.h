@@ -50,6 +50,7 @@
 #include <LogOutBuffer.h>
 #include <abstract/ILogFormatter.h>
 #include <StdTextLogFormatter.h>
+#include <sys/time.h>
 
 #define XDEBUG 0
 #define XTRACE 1
@@ -125,11 +126,23 @@ namespace itc {
             }
 
             static const char* getCurrTimeStr() {
-                static char tbuf[25];
-                time_t now = time(NULL);
+                static char tbuf[22];
+                struct timeval tp;
 
-                strncpy(tbuf, ctime(&now), 24);
-                tbuf[24] = 0;
+                gettimeofday(&tp,NULL);
+
+                time_t sec = tp.tv_sec;
+                time_t msec = tp.tv_usec/1000;
+                struct tm* ts=localtime(&sec);
+
+                if(ts == NULL)
+                {
+                  perror("localtime returned NULL in Logger::getCurrTimeStr()");
+                  abort();
+                }
+                strftime(tbuf,15,"%Y%m%d%H%M%S",ts);
+                snprintf(tbuf+14,6,".%3jdZ",msec);
+                tbuf[21] = 0;
                 return tbuf;
             }
 
