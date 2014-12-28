@@ -140,7 +140,7 @@ namespace itc {
                   perror("localtime returned NULL in Logger::getCurrTimeStr()");
                   abort();
                 }
-                strftime(tbuf,15,"%Y%m%d%H%M%S",ts);
+                strftime(tbuf,22,"%Y%m%d%H%M%S",ts);
                 snprintf(tbuf+14,6,".%3jdZ",msec);
                 tbuf[21] = 0;
                 return tbuf;
