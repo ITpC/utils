@@ -32,6 +32,9 @@
 
 #ifndef __INT2TYPE_H__
 #define __INT2TYPE_H__
+
+#include <cstdint>
+
 namespace itc
 {
     namespace utils

@@ -51,6 +51,7 @@
 #include <abstract/ILogFormatter.h>
 #include <StdTextLogFormatter.h>
 #include <sys/time.h>
+#include <Date.h>
 
 #define XDEBUG 0
 #define XTRACE 1
@@ -125,25 +126,26 @@ namespace itc {
                 mOutBuffer.post(mLogFormatter.getFormattedMessage());
             }
 
-            static const char* getCurrTimeStr() {
-                static char tbuf[22];
-                struct timeval tp;
+            static const char* getCurrTimeStr() 
+            {
+               static char tbuf[22];
+               Date aDate;
+               Time aTime=aDate.get();
 
-                gettimeofday(&tp,NULL);
+               time_t sec = aTime.mTimestamp.tv_sec;
+               time_t msec = aTime.mTimestamp.tv_usec/1000;
+               
+               struct tm* ts=localtime(&sec);
 
-                time_t sec = tp.tv_sec;
-                time_t msec = tp.tv_usec/1000;
-                struct tm* ts=localtime(&sec);
+               if(ts == NULL)
+               {
+                 throw std::bad_alloc();
+               }
+               strftime(tbuf,22,"%Y%m%d%H%M%S",ts);
+               snprintf(tbuf+14,6,".%03jdZ",msec);
+               tbuf[21] = 0;
 
-                if(ts == NULL)
-                {
-                  perror("localtime returned NULL in Logger::getCurrTimeStr()");
-                  abort();
-                }
-                strftime(tbuf,22,"%Y%m%d%H%M%S",ts);
-                snprintf(tbuf+14,6,".%3jdZ",msec);
-                tbuf[21] = 0;
-                return tbuf;
+               return tbuf;
             }
 
             inline void trace(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
@@ -265,7 +267,7 @@ namespace itc {
                 va_start(args, format);
                 aLocalFormatter.format(MAX_BUFF_SIZE, format, args);
                 va_end(args);
-                trace(mLogLevel, pFilename, pLineNumber, aLocalFormatter.getFormattedMessage());
+                trace(mLogLevel, pFilename, pLineNumber, aLocalFormatter.getFormattedMessage().c_str());
             }
 
             inline void debug(const char* pFilename, const size_t pLineNumber, const char* format, ...) {

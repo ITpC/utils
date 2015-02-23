@@ -9,6 +9,7 @@
           <itemPath>include/abstract/ILogFormatter.h</itemPath>
           <itemPath>include/abstract/LoggerHelpers.h</itemPath>
         </logicalFolder>
+        <itemPath>include/Date.h</itemPath>
         <itemPath>include/HString.h</itemPath>
         <itemPath>include/InterfaceCheck.h</itemPath>
         <itemPath>include/Log.h</itemPath>
@@ -53,6 +54,8 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="include/Date.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/HString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
@@ -104,6 +107,8 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="include/Date.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/HString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
