@@ -149,8 +149,6 @@ namespace itc {
             }
 
             inline void trace(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s - [TRACE] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
             }
 
             inline void trace(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
@@ -169,6 +167,8 @@ namespace itc {
             //-----------
 
             inline void debug(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
+                mLogFormatter.format(MAX_BUFF_SIZE, "%s [DEBUG] - %s:%d - %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
+                mOutBuffer.post(mLogFormatter.getFormattedMessage());
             }
 
             inline void debug(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
