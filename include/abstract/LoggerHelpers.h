@@ -41,7 +41,7 @@ namespace itc {
             class ILogOutputAdapter {
             public:
 
-                explicit ILogOutputAdapter(const char* filename) {
+                explicit ILogOutputAdapter(const char* filename=(char*)0) {
                 }
                 virtual void post(const std::string& pMessage) = 0;
 
