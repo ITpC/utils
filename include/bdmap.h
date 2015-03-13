@@ -19,14 +19,13 @@
 using boost::multi_index_container;
 using namespace boost::multi_index;
 
-struct first {
-};
-
-struct second {
-};
 
 template<typename FirstType, typename SecondType>
   struct bdmap {
+    struct first {
+    };
+    struct second {
+    };
     typedef std::pair<FirstType, SecondType> value_type;
     typedef multi_index_container<
       value_type,
