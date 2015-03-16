@@ -15,10 +15,8 @@
         <itemPath>include/Log.h</itemPath>
         <itemPath>include/Logger.h</itemPath>
         <itemPath>include/PString.h</itemPath>
-        <itemPath>include/Properties.h</itemPath>
         <itemPath>include/RangedNumber.h</itemPath>
         <itemPath>include/StringTokenizer.h</itemPath>
-        <itemPath>include/URI.h</itemPath>
         <itemPath>include/Val2Type.h</itemPath>
         <itemPath>include/bdmap.h</itemPath>
         <itemPath>include/compat_types.h</itemPath>
@@ -66,13 +64,9 @@
       </item>
       <item path="include/PString.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Properties.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/StringTokenizer.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/URI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -119,13 +113,9 @@
       </item>
       <item path="include/PString.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Properties.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/StringTokenizer.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/URI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
       </item>

@@ -30,186 +30,255 @@
  **/
 
 #ifndef __STRINGTOKENIZER__H__
-#define __STRINGTOKENIZER__H__
-#include <vector>
-#include <string>
-#include <string.h>
+#  define __STRINGTOKENIZER__H__
+#  include <vector>
+#  include <string>
+#  include <string.h>
+#  include <algorithm>
+#  include <list>
 
-namespace itc 
+namespace itc
 {
-    namespace utils {
-       /**
-        * Decouple a tokens from C++ string separeted by some delimiter.
-        * The bordering spaces are trimmed from token automatically. 
-        * The spases are detected by isspace c function.
-        * @note  the tokens are dinamically allocated and destructor do not care 
-        * about deallocation of them. It is responsibility of developer to control 
-        * deallocation of these tokens in his sorce code.
-        * @note No exceptions supported.
-        **/
-        class StringTokenizer
+ namespace utils
+ {
+  /**
+   *@brief a C++11 string tokenizer takes input string 'data' and splits it into 
+   * list of tokens based on 'delimiters' parameter. If symlexemes parameter is 
+   * not empty this tokenizer will assume the symbols of this parameter are the 
+   * separate lexems/tokens.
+   * 
+   * @param data is the input sequence of symbols [std::string]
+   * @param delimiters is the set of delimiters [std::string]
+   * @param symlexemes is optional set of the terminal symbols those may be 
+   * required for grammar [std::string].
+   * 
+   * @brief If you provide an empty string in delimiters, then those symbols in
+   * symlexemesm if there any, will act as delimiters. However they will be placed
+   * into resulting list.
+   **/
+  std::list<std::string> tokenizer(const std::string data, const std::string delimiters,const std::string symlexemes="")
+  {
+    std::list<std::string> tokens;
+    std::string token;
+
+    std::for_each(
+      data.begin(),data.end(),
+      [&delimiters,&tokens,&token,&symlexemes](const char c)
+      {
+        bool nodelim=true;
+
+        for(size_t i=0;i<delimiters.size();i++)
         {
-            private: 
-                typedef std::vector<std::string::size_type> PositionVector;
-                
-                std::vector<std::string>    Tokens;
-                PositionVector              Delimiters;
-                std::string::size_type      dlmLen;
-                std::string::size_type      textLen;
-                size_t                      position;
-            public:
-               /**
-                * @param text - C++ string which has to be tokenized
-                * @param delimiter C++ string that represents a delimiter of tokens for given text
-                **/
-                StringTokenizer(const std::string& text,const std::string& delimiter)
-                :    dlmLen(delimiter.length()),textLen(text.length()),position(0)
-                {
-                    if(textLen>0)
-                    {
-                        std::string::size_type pos=0;
-                        std::string::size_type pos_next=0;
-                        bool is_a_delimiter=false;
-                        for(size_t i=pos;i<textLen;i++)
-                        {
-                            for(size_t j=0;j<dlmLen;j++)
-                            {
-                                if(text.c_str()[i]==delimiter.c_str()[j])
-                                {
-                                    is_a_delimiter=true;
-                                    break;
-                                }
-                            }
-                            if(is_a_delimiter)
-                            {
-                                if(pos!=pos_next)
-                                {
-                                    std::string tmp;
-                                    tmp.insert(0,text,pos,pos_next-pos);
-                                    Tokens.push_back(tmp);
-                                }
-                                
-                                pos_next++;
-                                pos = pos_next;
-                                is_a_delimiter=false;
-                            }
-                            else
-                            {
-                                pos_next++;
-                                if(pos_next == textLen )
-                                {
-                                    std::string tmp;
-                                    tmp.insert(0,text,pos,pos_next-pos);
-                                    Tokens.push_back(tmp);                  
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                ~StringTokenizer()
-                {
-                    Tokens.clear();
-                }
-        
-                
-                /**
-                  * @return an amount of tokens.
-                  */
-                
-                inline size_t size()
-                {
-                    return Tokens.size();
-                }
-        
-                
-                /**
-                  * @return true if no tokens are determined in given text.
-                  */
-                inline bool empty()
-                {
-                    return Tokens.size()==0;
-                }
-                
-        
-                /**
-                  * @return true when next token is present, false otherwiese.
-                  */
-                inline bool hasNextToken()
-                {
-                    return ((Tokens.size())>position);
-                }
-        
-                
-                /**
-                  * @return next token.
-                  * @note here is no availability check, be sure to check presence 
-                  * of next token with a method hasNextToken()
-                  */
-                inline std::string& nextToken()
-                {
-                    return Tokens[position++];
-                }
-        
-                
-                /**
-                  * @return number of tokens still remaining to be taken by 
-                  * StringTokenizrer::nextToken()
-                  */
-                inline size_t tokensRemain()
-                {
-                    return Tokens.size()-position;
-                }
-                
-                inline std::vector<std::string>::iterator begin()
-                {
-                    return Tokens.begin();
-                }
-        
-                inline std::vector<std::string>::iterator end()
-                {
-                    return Tokens.end();
-                }
-        
-                inline std::vector<std::string>::reverse_iterator rbegin()
-                {
-                    return Tokens.rbegin();
-                }
-        
-                inline std::vector<std::string>::reverse_iterator rend()
-                {
-                    return Tokens.rend();
-                }
-                
-                inline std::string& operator[] (size_t i)
-                {
-                    return Tokens[i];
-                }
-                
-                inline char* trim(char* src)
-                {
-                    size_t i=0,j=0;
-                    size_t len=strlen(src);
-                    if(len==0) return NULL;
-                    for(i=0;i<len;i++)
-                        if(isspace(src[i]) == 0 )
-                            break;
-                    
-                    for(j=(len-1);j>=0;j--)
-                        if(isspace(src[j]) == 0 )
-                            break;
-        
-                    if((i!=0)||(j!=(len-1)))
-                    {
-                        size_t cplen=(len-i)-(len-(++j));
-                        char* tmp=new char[cplen+1];
-                        memset(tmp,0,cplen+1);
-                        strncpy(tmp,&(src[i]),cplen);
-                        return tmp;
-                    }
-                    return src;
-                }
-        };
-    }
+          if(c == delimiters[i])
+          {
+            if(!token.empty())
+            {
+              tokens.push_back(token);
+              token.clear();
+            }
+            nodelim=false;
+            break;
+          }
+        }
+
+        bool oslex=false;
+
+        if(nodelim)
+        {
+          for(size_t i=0;i<symlexemes.size();i++)
+          {
+            if(c == symlexemes[i])
+            {
+              oslex=true;
+              if(!token.empty())
+              {
+                tokens.push_back(token);
+                token.clear();
+              }
+              token.append(1u,c);
+              tokens.push_back(token);
+              token.clear();
+            }
+          }
+        }
+        if(nodelim && (!oslex))
+        {
+          token.append(1u,c);
+        }
+      }
+    );
+    return tokens;
+  }
+
+   
+  /**
+   * @brief A LEGACY CRAP ! Obsoleted !
+   * Decouple a tokens from C++ string separeted by some delimiter.
+   * The bordering spaces are trimmed from token automatically. 
+   * The spases are detected by isspace c function.
+   * @note  the tokens are dinamically allocated and destructor do not care 
+   * about deallocation of them. It is responsibility of developer to control 
+   * deallocation of these tokens in his sorce code.
+   * @note No exceptions supported.
+   **/
+  class StringTokenizer
+  {
+  private:
+   typedef std::vector<std::string::size_type> PositionVector;
+
+   std::vector<std::string> Tokens;
+   PositionVector Delimiters;
+   std::string::size_type dlmLen;
+   std::string::size_type textLen;
+   size_t position;
+  public:
+
+   /**
+    * @param text - C++ string which has to be tokenized
+    * @param delimiter C++ string that represents a delimiter of tokens for given text
+    **/
+   StringTokenizer(const std::string& text, const std::string& delimiter)
+     : dlmLen(delimiter.length()), textLen(text.length()), position(0)
+   {
+     if (textLen > 0)
+     {
+       std::string::size_type pos = 0;
+       std::string::size_type pos_next = 0;
+       bool is_a_delimiter = false;
+       for (size_t i = pos; i < textLen; i++)
+       {
+         for (size_t j = 0; j < dlmLen; j++)
+         {
+           if (text.c_str()[i] == delimiter.c_str()[j])
+           {
+             is_a_delimiter = true;
+             break;
+           }
+         }
+         if (is_a_delimiter)
+         {
+           if (pos != pos_next)
+           {
+             std::string tmp;
+             tmp.insert(0, text, pos, pos_next - pos);
+             Tokens.push_back(tmp);
+           }
+
+           pos_next++;
+           pos = pos_next;
+           is_a_delimiter = false;
+         } else
+         {
+           pos_next++;
+           if (pos_next == textLen)
+           {
+             std::string tmp;
+             tmp.insert(0, text, pos, pos_next - pos);
+             Tokens.push_back(tmp);
+           }
+         }
+       }
+     }
+   }
+
+   ~StringTokenizer()
+   {
+     Tokens.clear();
+   }
+
+   /**
+    * @return an amount of tokens.
+    */
+
+   inline size_t size()
+   {
+     return Tokens.size();
+   }
+
+   /**
+    * @return true if no tokens are determined in given text.
+    */
+   inline bool empty()
+   {
+     return Tokens.size() == 0;
+   }
+
+   /**
+    * @return true when next token is present, false otherwiese.
+    */
+   inline bool hasNextToken()
+   {
+     return ((Tokens.size()) > position);
+   }
+
+   /**
+    * @return next token.
+    * @note here is no availability check, be sure to check presence 
+    * of next token with a method hasNextToken()
+    */
+   inline std::string& nextToken()
+   {
+     return Tokens[position++];
+   }
+
+   /**
+    * @return number of tokens still remaining to be taken by 
+    * StringTokenizrer::nextToken()
+    */
+   inline size_t tokensRemain()
+   {
+     return Tokens.size() - position;
+   }
+
+   inline std::vector<std::string>::iterator begin()
+   {
+     return Tokens.begin();
+   }
+
+   inline std::vector<std::string>::iterator end()
+   {
+     return Tokens.end();
+   }
+
+   inline std::vector<std::string>::reverse_iterator rbegin()
+   {
+     return Tokens.rbegin();
+   }
+
+   inline std::vector<std::string>::reverse_iterator rend()
+   {
+     return Tokens.rend();
+   }
+
+   inline std::string& operator[](size_t i)
+   {
+     return Tokens[i];
+   }
+
+   inline char* trim(char* src)
+   {
+     size_t i = 0, j = 0;
+     size_t len = strlen(src);
+     if (len == 0) return NULL;
+     for (i = 0; i < len; i++)
+       if (isspace(src[i]) == 0)
+         break;
+
+     for (j = (len - 1); j >= 0; j--)
+       if (isspace(src[j]) == 0)
+         break;
+
+     if ((i != 0) || (j != (len - 1)))
+     {
+       size_t cplen = (len - i)-(len - (++j));
+       char* tmp = new char[cplen + 1];
+       memset(tmp, 0, cplen + 1);
+       strncpy(tmp, &(src[i]), cplen);
+       return tmp;
+     }
+     return src;
+   }
+  };
+ }
 }
 #endif
