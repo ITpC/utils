@@ -126,6 +126,11 @@ namespace itc
             }
           }
         );
+        if(!token.empty())
+        {
+          tokens.push_back(token);
+          token.clear();
+        }
         return tokens;
       }
     };
