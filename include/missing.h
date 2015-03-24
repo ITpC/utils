@@ -77,7 +77,7 @@ namespace itc {
             return mArray;
         }
 
-        // boost::regex has a bug with following regex in 4.8.3. An exception will
+        // std::regex has a bug with following regex in 4.8.3. An exception will
         // be trown on application start. Repaced back with boost::regex 11.12.2014
         const boost::regex aNumRegEx(
                 std::string("^[-]?[0-9]*[.]?[0-9]+([eE][+-][0-9]+)?$"),
