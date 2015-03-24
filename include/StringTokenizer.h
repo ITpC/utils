@@ -73,9 +73,9 @@ namespace itc
        * into resulting list.
        **/
       const std::list<std::string>& scan(
-        const std::string data,
-        const std::string delimiters,
-        const std::string symlexemes = ""
+        const std::string& data,
+        const std::string& delimiters,
+        const std::string& symlexemes = ""
         )
       {
         std::string token;

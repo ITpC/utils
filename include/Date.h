@@ -93,14 +93,12 @@ namespace itc
                this->update();
            };
 
-           Date(const Date& ref)
+           Date(const Date& ref) : mTime(ref.mTime)
            {
-               mTime=ref.mTime;
            }
            
-           Date(const Time& ref)
+           Date(const Time& ref) : mTime(ref)
            {
-               mTime=ref;
            }
            
            bool operator<(const Date& ref) const
