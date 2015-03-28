@@ -87,7 +87,7 @@ namespace itc {
             std::shared_ptr<TOutAdapter> mOutAdapter;
             LogOutBuffer<TOutAdapter, TSafe> mOutBuffer;
             TFormatter mLogFormatter;
-            itc::sys::Mutex mMutex;
+            std::mutex mMutex;
 
             Int2Type<LOGLEVEL> mLogLevel;
             const char* mLogLevelStr;
@@ -102,7 +102,7 @@ namespace itc {
             : mOutAdapter(pOutAdapter),
             mOutBuffer(mOutAdapter, TSafe),
             mLogFormatter(), mMutex(), mLogLevelStr(LL2STR(LOGLEVEL)), mAppName(pAppName) {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
 
                 STATIC_CHECKER3MSG(
                         CheckRelationship(
@@ -260,7 +260,7 @@ namespace itc {
             //-------------------
 
             inline void trace(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
                 TFormatter aLocalFormatter;
 
                 va_list args;
@@ -271,7 +271,7 @@ namespace itc {
             }
 
             inline void debug(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
                 TFormatter aLocalFormatter;
 
                 va_list args;
@@ -282,7 +282,7 @@ namespace itc {
             }
 
             inline void error(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
                 TFormatter aLocalFormatter;
 
                 va_list args;
@@ -293,7 +293,7 @@ namespace itc {
             }
 
             inline void fatal(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
                 TFormatter aLocalFormatter;
 
                 va_list args;
@@ -304,7 +304,7 @@ namespace itc {
             }
 
             inline void info(const char* format, ...) {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
                 TFormatter aLocalFormatter;
 
                 va_list args;
@@ -315,7 +315,7 @@ namespace itc {
             }
 
             inline void flush() {
-                itc::sys::SyncLock sync(mMutex);
+                std::lock_guard<std::mutex> sync(mMutex);
                 mOutBuffer.flush();
             }
 
