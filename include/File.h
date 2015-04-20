@@ -98,9 +98,8 @@ namespace utils
       
       if(!(afile.exists()&&afile.isregular()))
       {
-        throw TITCException<exceptions::ITCGeneral>(errno);
+        throw std::logic_error("File "+fname+" does not exists or is not regular");
       }
-      itc::getLog()->info("Reading configuration file: %s", mFile.c_str());
     }
 
     const std::string& getFileName() const
