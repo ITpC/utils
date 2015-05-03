@@ -54,7 +54,10 @@ namespace itc
        {
            struct timeval mTimestamp;
 
-           Time() {}
+           Time()
+           {
+             gettimeofday(&mTimestamp,NULL);
+           }
 
            Time(const time_t sec, const time_t usec)
            {

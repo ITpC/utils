@@ -32,7 +32,8 @@ namespace utils
     File(const std::string& name)
       :mName(name), mExists(false)
     {
-
+        if(!exists())
+          throw std::runtime_error("No such file or directory: " + mName);
     }
 
     bool exists()
@@ -98,7 +99,7 @@ namespace utils
       
       if(!(afile.exists()&&afile.isregular()))
       {
-        throw std::logic_error("File "+fname+" does not exists or is not regular");
+        throw std::logic_error("File "+fname+" does not exists or it is not regular");
       }
     }
 
