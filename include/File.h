@@ -32,8 +32,11 @@ namespace utils
     File(const std::string& name)
       :mName(name), mExists(false)
     {
-        if(!exists())
-          throw std::runtime_error("No such file or directory: " + mName);
+      if(name.empty())
+        throw std::logic_error("File(), - empty string provided as the file name");
+
+      if(!exists())
+        throw std::runtime_error("No such file or directory: " + mName);
     }
 
     bool exists()
@@ -93,13 +96,20 @@ namespace utils
     std::string mFile;
   public:
 
-    FileReader(const std::string& fname) : mFile(fname)
+    explicit FileReader(const std::string& fname) : mFile(fname)
     { 
-      File afile(fname);
-      
-      if(!(afile.exists()&&afile.isregular()))
+      if(mFile.length() > 0)
       {
-        throw std::logic_error("File "+fname+" does not exists or it is not regular");
+        File afile(fname);
+
+        if(!(afile.exists()&&afile.isregular()))
+        {
+          throw std::logic_error("File "+fname+" does not exists or is not regular");
+        }
+      }
+      else
+      {
+        throw std::logic_error("FileReader(), - file name is empty.");
       }
     }
 
@@ -108,14 +118,20 @@ namespace utils
       return mFile;
     }
 
-    const std::string read()
+    const std::string readAsText()
     {
       std::stringstream s;
-      std::fstream fs(mFile, std::ios_base::in);
+      std::fstream fs(getFileName(), std::ios_base::in);
+      
       if(fs)
       {
         s << fs.rdbuf();
         fs.close();
+      }
+      else
+      {
+        const std::string msg(std::string("FileReader::readAsText(), - Can't open the file for reading."));
+        throw std::logic_error(msg);
       }
       return s.str();
     }
