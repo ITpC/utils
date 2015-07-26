@@ -89,6 +89,11 @@ namespace utils
     {
       return((mStats.st_mode & S_IFSOCK) != 0);
     }
+    
+    const std::string& getName() const
+    {
+      return mName;
+    }
   };
   
   class FileReader
