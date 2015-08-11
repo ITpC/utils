@@ -76,307 +76,270 @@
 
 
 
-namespace itc {
-    namespace utils {
+namespace itc
+{
+  namespace utils
+  {
 
-        template <
-            typename TOutAdapter, typename TFormatter, int LOGLEVEL = XDEBUG, bool TSafe = true
-        >class Logger
+    template <
+    typename TOutAdapter, typename TFormatter, int LOGLEVEL = XDEBUG, bool TSafe = true
+    > class Logger
+    {
+    private:
+      std::mutex mMutex;
+      std::shared_ptr<TOutAdapter> mOutAdapter;
+      LogOutBuffer<TOutAdapter, TSafe> mOutBuffer;
+      TFormatter mLogFormatter;
+      TFormatter mLogFormatter1;
+      
+
+      Int2Type<LOGLEVEL> mLogLevel;
+      const char* mLogLevelStr;
+      const char* mAppName;
+
+    public:
+      typedef itc::utils::abstract::ILogOutputAdapter AbstractLogOutAdapter;
+      typedef itc::utils::abstract::ILogFormatter AbstractLogFormatter;
+      typedef typename std::shared_ptr<TOutAdapter> SharedTOutAdapter;
+      typedef itc::utils::abstract::ILogFormatter::shared_buff shared_buff;
+
+      explicit Logger(SharedTOutAdapter& pOutAdapter, const char* pAppName)
+      : mMutex(), mOutAdapter(pOutAdapter), mOutBuffer(mOutAdapter, TSafe),
+      mLogFormatter(), mLogFormatter1(), mLogLevelStr(LL2STR(LOGLEVEL)),
+      mAppName(pAppName)
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
+        STATIC_CHECKER3MSG(
+          CheckRelationship(
+            TOutAdapter, subclassof, AbstractLogOutAdapter
+          ),
+          TOutAdapter, _is_not_a_subclass_of_, AbstractLogOutAdapter
+        );
+
+        STATIC_CHECKER3MSG(
+          CheckRelationship(
+            TFormatter, subclassof, AbstractLogFormatter
+          ),
+          TFormatter, _is_not_a_subclass_of_, AbstractLogFormatter
+        );
+
+
+        shared_buff formattedMessage(
+          mLogFormatter.format(
+            MAX_BUFF_SIZE, "%s - %s: Logger::Logger() [ %s ]:%d: start logging of level %s\n",
+            getCurrTimeStr(), mAppName, __FILE__, __LINE__, mLogLevelStr
+            )
+          );
+        mOutBuffer.post(formattedMessage);
+      }
+
+    private:
+      static const char* getCurrTimeStr()
+      {
+        static char tbuf[22];
+        Date aDate;
+        Time aTime = aDate.get();
+
+        time_t sec = aTime.mTimestamp.tv_sec;
+        time_t msec = aTime.mTimestamp.tv_usec / 1000;
+
+        struct tm* ts = localtime(&sec);
+
+        if (ts == NULL)
         {
-        private:
-            std::shared_ptr<TOutAdapter> mOutAdapter;
-            LogOutBuffer<TOutAdapter, TSafe> mOutBuffer;
-            TFormatter mLogFormatter;
-            std::mutex mMutex;
+          throw std::bad_alloc();
+        }
+        strftime(tbuf, 22, "%Y%m%d%H%M%S", ts);
+        snprintf(tbuf + 14, 6, ".%03jdZ", msec);
+        tbuf[21] = 0;
 
-            Int2Type<LOGLEVEL> mLogLevel;
-            const char* mLogLevelStr;
-            const char* mAppName;
+        return tbuf;
+      }
 
-        public:
-            typedef itc::utils::abstract::ILogOutputAdapter AbstractLogOutAdapter;
-            typedef itc::utils::abstract::ILogFormatter AbstractLogFormatter;
-            typedef typename std::shared_ptr<TOutAdapter> SharedTOutAdapter;
+      void trace(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
 
-            explicit Logger(SharedTOutAdapter& pOutAdapter, const char* pAppName)
-            : mOutAdapter(pOutAdapter),
-            mOutBuffer(mOutAdapter, TSafe),
-            mLogFormatter(), mMutex(), mLogLevelStr(LL2STR(LOGLEVEL)), mAppName(pAppName) {
-                std::lock_guard<std::mutex> sync(mMutex);
+      void trace(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [TRACE] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-                STATIC_CHECKER3MSG(
-                        CheckRelationship(
-                        TOutAdapter, subclassof, AbstractLogOutAdapter
-                        ),
-                        TOutAdapter, _is_not_a_subclass_of_, AbstractLogOutAdapter
-                        );
+      void trace(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
 
-                STATIC_CHECKER3MSG(
-                        CheckRelationship(
-                        TFormatter, subclassof, AbstractLogFormatter
-                        ),
-                        TFormatter, _is_not_a_subclass_of_, AbstractLogFormatter
-                        );
+      void trace(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
 
+      void trace(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
+      //-----------
 
-                mLogFormatter.format(
-                        MAX_BUFF_SIZE, "%s - %s: Logger::Logger() [ %s ]:%d: start logging of level %s\n",
-                        getCurrTimeStr(), mAppName, __FILE__, __LINE__, mLogLevelStr
-                        );
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void debug(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [DEBUG] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            static const char* getCurrTimeStr() 
-            {
-               static char tbuf[22];
-               Date aDate;
-               Time aTime=aDate.get();
+      void debug(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [DEBUG] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-               time_t sec = aTime.mTimestamp.tv_sec;
-               time_t msec = aTime.mTimestamp.tv_usec/1000;
-               
-               struct tm* ts=localtime(&sec);
+      void debug(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
 
-               if(ts == NULL)
-               {
-                 throw std::bad_alloc();
-               }
-               strftime(tbuf,22,"%Y%m%d%H%M%S",ts);
-               snprintf(tbuf+14,6,".%03jdZ",msec);
-               tbuf[21] = 0;
+      void debug(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
 
-               return tbuf;
-            }
+      void debug(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
+      //-------------------
 
-            inline void trace(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
+      void fatal(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void trace(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s - [TRACE] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void fatal(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void trace(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
+      void fatal(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void trace(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
+      void fatal(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void trace(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
-            //-----------
+      void fatal(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
+      //-------------------
 
-            inline void debug(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [DEBUG] - %s:%d - %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void error(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void debug(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [DEBUG] - %s:%d - %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void error(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void debug(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
+      void error(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
 
-            inline void debug(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
+      void error(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message) { }
 
-            inline void debug(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
-            //-------------------
+      void error(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message->data()));
+      }
+      //-------------------
 
-            inline void fatal(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void info(Int2Type<XTRACE> fictive, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [INFO] - %s\n", getCurrTimeStr(), message->data()));
+      }
 
-            inline void fatal(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void info(Int2Type<XINFO> fictive, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [INFO] - %s\n", getCurrTimeStr(), message->data()));
+      }
 
-            inline void fatal(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void info(Int2Type<XERROR> fictive, const shared_buff& message) { }
 
-            inline void fatal(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void info(Int2Type<XFATAL> fictive, const shared_buff& message) { }
 
-            inline void fatal(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [FATAL] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
-            //-------------------
+      void info(Int2Type<XDEBUG> fictive, const shared_buff& message)
+      {
+        mOutBuffer.post(mLogFormatter1.format(MAX_BUFF_SIZE, "%s - [INFO] - %s\n", getCurrTimeStr(), message->data()));
+      }
 
-            inline void error(Int2Type<XTRACE> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      //-------------------
 
-            inline void error(Int2Type<XERROR> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      public:
+      void trace(const char* pFilename, const size_t pLineNumber, const char* format, ...)
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
+        va_list args;
+        va_start(args, format);
+        shared_buff formattedMessage(mLogFormatter.format(MAX_BUFF_SIZE, format, args));
+        va_end(args);
+        trace(mLogLevel, pFilename, pLineNumber, formattedMessage);
+      }
 
-            inline void error(Int2Type<XINFO> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void debug(const char* pFilename, const size_t pLineNumber, const char* format, ...)
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
+        va_list args;
+        va_start(args, format);
+        shared_buff formattedMessage(mLogFormatter.format(MAX_BUFF_SIZE, format, args));
+        va_end(args);
+        debug(mLogLevel, pFilename, pLineNumber, formattedMessage);
+      }
 
-            inline void error(Int2Type<XFATAL> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-            }
+      void error(const char* pFilename, const size_t pLineNumber, const char* format, ...)
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
 
-            inline void error(Int2Type<XDEBUG> fictive, const char* pFilename, const size_t pLineNumber, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [ERROR] - %s:%d: %s\n", getCurrTimeStr(), pFilename, pLineNumber, message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
-            //-------------------
+        va_list args;
+        va_start(args, format);
+        shared_buff formattedMessage(mLogFormatter.format(MAX_BUFF_SIZE, format, args));
+        va_end(args);
+        error(mLogLevel, pFilename, pLineNumber, formattedMessage);
+      }
 
-            inline void info(Int2Type<XTRACE> fictive, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [INFO] - %s\n", getCurrTimeStr(), message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void fatal(const char* pFilename, const size_t pLineNumber, const char* format, ...)
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
 
-            inline void info(Int2Type<XINFO> fictive, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [INFO] - %s\n", getCurrTimeStr(), message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+        va_list args;
+        va_start(args, format);
+        shared_buff formattedMessage(mLogFormatter.format(MAX_BUFF_SIZE, format, args));
+        va_end(args);
+        fatal(mLogLevel, pFilename, pLineNumber, formattedMessage);
+      }
 
-            inline void info(Int2Type<XERROR> fictive, const char* message) {
-            }
+      void info(const char* format, ...)
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
 
-            inline void info(Int2Type<XFATAL> fictive, const char* message) {
-            }
+        va_list args;
+        va_start(args, format);
+        shared_buff formattedMessage(mLogFormatter.format(MAX_BUFF_SIZE, format, args));
+        va_end(args);
+        info(mLogLevel, formattedMessage);
+      }
 
-            inline void info(Int2Type<XDEBUG> fictive, const char* message) {
-                mLogFormatter.format(MAX_BUFF_SIZE, "%s [INFO] - %s\n", getCurrTimeStr(), message);
-                mOutBuffer.post(mLogFormatter.getFormattedMessage());
-            }
+      void flush()
+      {
+        std::lock_guard<std::mutex> sync(mMutex);
+        mOutBuffer.flush();
+      }
 
-            //-------------------
+      ~Logger()
+      {
+        flush();
+      }
+    };
 
-            inline void trace(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                std::lock_guard<std::mutex> sync(mMutex);
-                TFormatter aLocalFormatter;
+    class CanNotOpenTheLogException : public std::exception
+    {
+    private:
+      int ERRNO;
+    public:
 
-                va_list args;
-                va_start(args, format);
-                aLocalFormatter.format(MAX_BUFF_SIZE, format, args);
-                va_end(args);
-                trace(mLogLevel, pFilename, pLineNumber, aLocalFormatter.getFormattedMessage().c_str());
-            }
+      CanNotOpenTheLogException() throw ()
+      {
+        ERRNO = errno;
+      }
 
-            inline void debug(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                std::lock_guard<std::mutex> sync(mMutex);
-                TFormatter aLocalFormatter;
-
-                va_list args;
-                va_start(args, format);
-                aLocalFormatter.format(MAX_BUFF_SIZE, format, args);
-                va_end(args);
-                debug(mLogLevel, pFilename, pLineNumber, aLocalFormatter.getFormattedMessage().c_str());
-            }
-
-            inline void error(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                std::lock_guard<std::mutex> sync(mMutex);
-                TFormatter aLocalFormatter;
-
-                va_list args;
-                va_start(args, format);
-                aLocalFormatter.format(MAX_BUFF_SIZE, format, args);
-                va_end(args);
-                error(mLogLevel, pFilename, pLineNumber, aLocalFormatter.getFormattedMessage().c_str());
-            }
-
-            inline void fatal(const char* pFilename, const size_t pLineNumber, const char* format, ...) {
-                std::lock_guard<std::mutex> sync(mMutex);
-                TFormatter aLocalFormatter;
-
-                va_list args;
-                va_start(args, format);
-                aLocalFormatter.format(MAX_BUFF_SIZE, format, args);
-                va_end(args);
-                fatal(mLogLevel, pFilename, pLineNumber, aLocalFormatter.getFormattedMessage().c_str());
-            }
-
-            inline void info(const char* format, ...) {
-                std::lock_guard<std::mutex> sync(mMutex);
-                TFormatter aLocalFormatter;
-
-                va_list args;
-                va_start(args, format);
-                aLocalFormatter.format(MAX_BUFF_SIZE, format, args);
-                va_end(args);
-                info(mLogLevel, aLocalFormatter.getFormattedMessage().c_str());
-            }
-
-            inline void flush() {
-                std::lock_guard<std::mutex> sync(mMutex);
-                mOutBuffer.flush();
-            }
-
-            ~Logger() {
-                flush();
-            }
-        };
-
-        class CanNotOpenTheLogException : public std::exception {
-        private:
-            int ERRNO;
-        public:
-
-            CanNotOpenTheLogException() throw () {
-                ERRNO = errno;
-            }
-
-            const char* what() const throw () {
-                return strerror(ERRNO);
-            }
-        };
-
-        class STDOutLogThreadUnsafeAdapter : public abstract::ILogOutputAdapter {
-        private:
-            FILE* mLogFile;
-        public:
-
-            explicit STDOutLogThreadUnsafeAdapter(const char* filename)
-            : abstract::ILogOutputAdapter(filename), mLogFile(NULL) {
-                mLogFile = fopen(filename, "w");
-                if (mLogFile == NULL) {
-                    throw CanNotOpenTheLogException();
-                }
-            }
-
-            explicit STDOutLogThreadUnsafeAdapter(const STDOutLogThreadUnsafeAdapter& p)
-            : abstract::ILogOutputAdapter(NULL) {
-                mLogFile = p.mLogFile;
-            }
-
-            inline void post(const std::string& pMsg) {
-                fprintf(mLogFile, "%s", pMsg.c_str());
-            }
-
-            inline void flush() {
-                fflush(mLogFile);
-            }
-
-            ~STDOutLogThreadUnsafeAdapter() {
-                flush();
-            }
-        };
-
-
-
-        typedef Logger<STDOutLogThreadUnsafeAdapter, StdTextLogFormatter, XDEBUG, false > PrimitiveDebugLog;
-        typedef Logger<STDOutLogThreadUnsafeAdapter, StdTextLogFormatter, XERROR, false > PrimitiveErrorLog;
-        typedef Logger<STDOutLogThreadUnsafeAdapter, StdTextLogFormatter, XINFO, false > PrimitiveInfoLog;
-        typedef Logger<STDOutLogThreadUnsafeAdapter, StdTextLogFormatter, XFATAL, false > PrimitiveFatalLog;
-        typedef Logger<STDOutLogThreadUnsafeAdapter, StdTextLogFormatter, XTRACE, false > PrimitiveTraceLog;
-    }
+      const char* what() const throw ()
+      {
+        return strerror(ERRNO);
+      }
+    };
+  }
 }
 
 #endif /*__LOGGER_H__*/

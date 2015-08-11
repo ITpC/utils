@@ -68,13 +68,13 @@ public:
                 mInt=ref.mInt; 
         }
 
-        inline RangedNumber& operator=(const RangedNumber& ref) 
+        RangedNumber& operator=(const RangedNumber& ref) 
         { 
                 mInt=ref.mInt; 
                 return *this; 
         }
 
-        inline RangedNumber& operator=(const Number val) 
+        RangedNumber& operator=(const Number val) 
         { 
                 RangedNumber ret(val); 
                 mInt=ret.mInt; 
@@ -82,7 +82,7 @@ public:
         } 
         
         
-        inline RangedNumber& operator-() 
+        RangedNumber& operator-() 
         { 
                 if((-mInt > high) || (-mInt < low)) 
                         throw RangedNumberOutOfBoundsException(); 
@@ -90,18 +90,18 @@ public:
                 return (*this); 
         }
 
-        inline RangedNumber operator-(const RangedNumber& ref) 
+        RangedNumber operator-(const RangedNumber& ref) 
         { 
                 RangedNumber ret(mInt-ref.mInt); 
                 return ret; 
         }
 
-        inline RangedNumber operator-(const Number val) 
+        RangedNumber operator-(const Number val) 
         { 
                 return RangedNumber(mInt-val); 
         } 
         
-        inline RangedNumber& operator++() 
+        RangedNumber& operator++() 
         { 
                 Number ret=mInt+1; 
                 if((ret > high) || (ret < low)) 
@@ -110,7 +110,7 @@ public:
                 return (*this); 
         }
 
-        inline RangedNumber& operator--() 
+        RangedNumber& operator--() 
         { 
                 Number ret=mInt-1; 
                 if((ret > high) || (ret < low)) 
@@ -119,28 +119,28 @@ public:
                 return (*this); 
         }
 
-        inline RangedNumber& operator+=(const RangedNumber& ref) 
+        RangedNumber& operator+=(const RangedNumber& ref) 
         { 
                 RangedNumber ret(mInt+ref.mInt); 
                 mInt=ret.mInt; 
                 return (*this); 
         }
 
-        inline RangedNumber& operator+=(const Number val) 
+        RangedNumber& operator+=(const Number val) 
         { 
                 RangedNumber ret(mInt+val); 
                 mInt=ret.mInt; 
                 return (*this); 
         }
 
-        inline RangedNumber& operator-=(const RangedNumber& ref) 
+        RangedNumber& operator-=(const RangedNumber& ref) 
         { 
                 RangedNumber ret(mInt-ref.mInt); 
                 mInt=ret.mInt; 
                 return (*this); 
         }
 
-        inline RangedNumber& operator-=(const Number val) 
+        RangedNumber& operator-=(const Number val) 
         { 
                 RangedNumber ret(mInt-val); 
                 mInt=ret.mInt; 
@@ -148,24 +148,24 @@ public:
         }
 
 
-        inline RangedNumber operator+(const RangedNumber& ref) 
+        RangedNumber operator+(const RangedNumber& ref) 
         { 
                 return RangedNumber(mInt+ref.mInt); 
         }
 
-        inline RangedNumber operator+(const Number val) 
+        RangedNumber operator+(const Number val) 
         { 
                 return RangedNumber(mInt+val); 
         }
 
-        inline Number getInt() 
+        Number getInt() 
         { 
                 return mInt; 
         }
 
 /* Can't be used because of default behavior of gcc to convert all values of  
         expression to the Number. We will lost a bounds checking. 
-        inline operator Number() 
+        operator Number() 
         { 
                 return mInt; 
         } 

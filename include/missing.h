@@ -49,7 +49,7 @@ namespace itc {
         //Do not iuse this function in your projects. This is a historical
         //artifact, and stays here for compatibility with older projects.
         //This function is deprecated, and will be obsolet soon.
-        static inline boost::shared_array<char> toUpper(const std::string& ref) {
+        static boost::shared_array<char> toUpper(const std::string& ref) {
             std::string::size_type len = ref.length();
             boost::shared_array<char> mArray(new char[len + 1]);
             char* mArrayPtr = mArray.get();
@@ -65,7 +65,7 @@ namespace itc {
         //Do not iuse this function in your projects. This is a historical
         //artifact, and stays here for compatibility with older projects.
         //This function is deprecated, and will be obsolet soon.
-        static inline boost::shared_array<char> toLower(const std::string& ref) {
+        static boost::shared_array<char> toLower(const std::string& ref) {
             std::string::size_type len = ref.length();
             boost::shared_array<char> mArray(new char[len + 1]);
             char* mArrayPtr = mArray.get();
@@ -94,7 +94,7 @@ namespace itc {
                 boost::regex::egrep
         );
         
-        static inline const bool isnumber(const std::string& str) 
+        static const bool isnumber(const std::string& str) 
         {
             if (boost::regex_match(str, aNumRegEx)) {
                 return true;
@@ -102,7 +102,7 @@ namespace itc {
             return false;
         }
 
-        static inline const bool ishex(const std::string& str) 
+        static const bool ishex(const std::string& str) 
         {
             if (boost::regex_match(str, aHexRegEx)) {
                 return true;
@@ -110,7 +110,7 @@ namespace itc {
             return false;
         }
 
-        static inline const bool isint(const std::string& str) 
+        static const bool isint(const std::string& str) 
         {
             if (boost::regex_match(str, anIntRegEx)) {
                 return true;
@@ -118,35 +118,35 @@ namespace itc {
             return false;
         }
         
-        static inline double s2double(const std::string& ref) {
+        static double s2double(const std::string& ref) {
             std::istringstream aConverter(ref);
             double ret;
             aConverter >> ret;
             return ret;
         }
 
-        static inline float s2float(const std::string& ref) {
+        static float s2float(const std::string& ref) {
             std::istringstream aConverter(ref);
             float ret;
             aConverter >> ret;
             return ret;
         }
 
-        static inline long s2long(const std::string& ref) {
+        static long s2long(const std::string& ref) {
             std::istringstream aConverter(ref);
             long ret;
             aConverter >> ret;
             return ret;
         }
 
-        static inline int s2int(const std::string& ref) {
+        static int s2int(const std::string& ref) {
             std::istringstream aConverter(ref);
             int ret;
             aConverter >> ret;
             return ret;
         }
 
-        static inline unsigned s2uint(const std::string& ref) {
+        static unsigned s2uint(const std::string& ref) {
             std::istringstream aConverter(ref);
             unsigned ret;
             aConverter >> ret;
@@ -161,14 +161,14 @@ namespace itc {
             return ret;            
         }
         
-        static inline long long s2dlong(const std::string& ref) {
+        static long long s2dlong(const std::string& ref) {
             std::istringstream aConverter(ref);
             long long ret;
             aConverter >> ret;
             return ret;
         }
 
-        static inline std::string num2s(const int val) {
+        static std::string num2s(const int val) {
             std::ostringstream aConverter;
             if (aConverter << val) {
                 return aConverter.str();
@@ -176,7 +176,7 @@ namespace itc {
             throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const int&)");
         }
 
-        static inline std::string num2s(const unsigned val) {
+        static std::string num2s(const unsigned val) {
             std::ostringstream aConverter;
             if (aConverter << val) {
                 return aConverter.str();
@@ -184,7 +184,7 @@ namespace itc {
             throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const unsigned&)");
         }
 
-        static inline std::string num2s(const float val) {
+        static std::string num2s(const float val) {
             std::ostringstream aConverter;
             if (aConverter << val) {
                 return aConverter.str();
@@ -192,7 +192,7 @@ namespace itc {
             throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const float&)");
         }
 
-        static inline std::string num2s(const double val) {
+        static std::string num2s(const double val) {
             std::ostringstream aConverter;
             if (aConverter << val) {
                 return aConverter.str();
@@ -200,7 +200,7 @@ namespace itc {
             throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const double&)");
         }
 
-        static inline std::string num2s(const long long val) {
+        static std::string num2s(const long long val) {
             std::ostringstream aConverter;
             if (aConverter << val) {
                 return aConverter.str();
@@ -213,7 +213,7 @@ namespace itc {
 
 #if defined (__MINGW32__) || defined (__CYGWIN__)
 
-inline char* rindex(const char* x, int c) {
+char* rindex(const char* x, int c) {
     if (x) {
         int l = strlen(x) - 1;
 
@@ -229,7 +229,7 @@ inline char* rindex(const char* x, int c) {
     return NULL;
 }
 
-inline char* index(const char* x, int c) {
+char* index(const char* x, int c) {
     if (x) {
         int len = strlen(x);
         if (!len) return NULL;
@@ -245,7 +245,7 @@ inline char* index(const char* x, int c) {
     return NULL;
 }
 
-inline char *strndup(const char *s, size_t n) {
+char *strndup(const char *s, size_t n) {
     size_t len = strlen(s);
     if (len > n) {
         char *ret = new char[n + 1];
@@ -261,14 +261,14 @@ inline char *strndup(const char *s, size_t n) {
 }
 #endif
 
-static inline char* itoa(const int i) {
+static char* itoa(const int i) {
     static char buff[21];
     memset(buff, 0, 21);
     snprintf(buff, 20, "%d", i);
     return buff;
 }
 
-static inline char* ftoa(const float i) {
+static char* ftoa(const float i) {
     static char buff[33];
     memset(buff, 0, 33);
     snprintf(buff, 32, "%f", i);

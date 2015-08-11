@@ -41,12 +41,11 @@ namespace itc {
 
             class ILogFormatter {
             public:
-
+                typedef std::shared_ptr<std::vector<char>> shared_buff;
                 explicit ILogFormatter() {
                 }
-                virtual void format(const size_t pMaxMsgLength, const char* format, ...) = 0;
-                virtual void format(const size_t pMaxMsgLength, const char* format, va_list args) = 0;
-                virtual const std::string& getFormattedMessage() = 0;
+                virtual const shared_buff format(const size_t pMaxMsgLength, const char* format, ...) = 0;
+                virtual const shared_buff format(const size_t pMaxMsgLength, const char* format, va_list args) = 0;
 
                 virtual ~ILogFormatter() {
                 }

@@ -62,12 +62,12 @@ namespace itc {
             char mString[MaxStorageSize];
             uint32_t mHash;
 
-            inline void mkHash() {
+            void mkHash() {
                 std::hash<std::string> str2hash;
                 mHash = str2hash(mString);
             }
 
-            inline void Init(const char* pCStr) {
+            void Init(const char* pCStr) {
                 if (pCStr == NULL) {
                     mLength = 0;
                     mString[0] = 0;
@@ -83,7 +83,7 @@ namespace itc {
                 mkHash();
             }
 
-            inline void Init(const std::string& pStr) {
+            void Init(const std::string& pStr) {
                 register size_t tmpl = pStr.length();
 
                 if (tmpl && (tmpl < MaxStorageSize)) {
@@ -104,7 +104,7 @@ namespace itc {
                 }
             }
 
-            inline void Init(const PString& ref) {
+            void Init(const PString& ref) {
                 mLength = ref.mLength;
                 memcopy(mString, ref.mString, mLength);
                 mHash = ref.mHash;
@@ -129,30 +129,30 @@ namespace itc {
                 mHash = 0;
             }
 
-            inline const char* c_str() {
+            const char* c_str() {
                 return mString;
             }
 
-            inline std::string str() {
+            std::string str() {
                 return std::string(mString);
             }
 
-            inline const PString& operator=(const PString& ref) {
+            const PString& operator=(const PString& ref) {
                 Init(ref);
                 return *this;
             }
 
-            inline const PString& operator=(const char* pCStr) {
+            const PString& operator=(const char* pCStr) {
                 Init(pCStr);
                 return (*this);
             }
 
-            inline const PString& operator=(const std::string& pStr) {
+            const PString& operator=(const std::string& pStr) {
                 Init(pStr);
                 return (*this);
             }
 
-            inline const PString& operator+=(const PString& ref) {
+            const PString& operator+=(const PString& ref) {
                 register size_type tmpl = mLength + ref.mLength;
 
                 if (tmpl < MaxStorageSize) {
@@ -167,40 +167,40 @@ namespace itc {
                 return *this;
             }
 
-            inline const PString operator=+(const PString& ref) {
+            const PString operator=+(const PString& ref) {
                 *this += ref;
                 return *this;
             }
 
-            inline const PString operator+(const PString& ref) {
+            const PString operator+(const PString& ref) {
                 return (*this+ref);
             }
 
-            inline const bool operator>(const PString& ref) {
+            const bool operator>(const PString& ref) {
                 return mHash > ref.mHash;
             }
 
-            inline const bool operator<(const PString& ref) {
+            const bool operator<(const PString& ref) {
                 return mHash < ref.mHash;
             }
 
-            inline const bool operator==(const PString& ref) {
+            const bool operator==(const PString& ref) {
                 return mHash == ref.mHash;
             }
 
-            inline const bool operator!=(const PString& ref) {
+            const bool operator!=(const PString& ref) {
                 return mHash != ref.mHash;
             }
 
-            inline uint32_t getHash() {
+            uint32_t getHash() {
                 return mHash;
             }
 
-            inline size_type length() {
+            size_type length() {
                 return mLength;
             }
 
-            inline bool less(const Pstring& ref) {
+            bool less(const Pstring& ref) {
                 if (mLength == ref.mLength) {
                     return (strncmp(mString, ref.mString, mLength) == -1);
                 }
@@ -219,7 +219,7 @@ namespace itc {
                 }
             }
 
-            inline bool greater(const Pstring& ref)
+            bool greater(const Pstring& ref)
             {
                 if ((mHash != ref.Mhash) && (!less(ref)))
                 {

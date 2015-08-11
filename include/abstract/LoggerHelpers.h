@@ -33,6 +33,8 @@
 #define LOGGERHELPERS_H_
 
 #include <string>
+#include <memory>
+#include <vector>
 
 namespace itc {
     namespace utils {
@@ -43,7 +45,7 @@ namespace itc {
 
                 explicit ILogOutputAdapter(const char* filename) {
                 }
-                virtual void post(const std::string& pMessage) = 0;
+                virtual void post(const std::shared_ptr<std::vector<char>>& pMessage) = 0;
 
             protected:
 

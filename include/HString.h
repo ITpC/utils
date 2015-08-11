@@ -77,57 +77,57 @@ namespace itc
             {
             }
         
-            inline const HString& operator=(const std::string& pStr)
+            const HString& operator=(const std::string& pStr)
             {
                 mHString=pStr;
                 mHash=str2hash(mHString);
                 return (*this);
             }
         
-            inline const HString& operator=(const char* pCStr)
+            const HString& operator=(const char* pCStr)
             {
                 mHString=pCStr;
                 mHash=str2hash(mHString);
                 return (*this);
             }
             
-            inline operator size_t() const
+            operator size_t() const
             {
                 return mHash;
             }
             
-            inline const bool operator<(const HString& ref) const
+            const bool operator<(const HString& ref) const
             {
                 return mHash < ref.mHash;
             }
         
-            inline const bool operator>(const HString& ref) const
+            const bool operator>(const HString& ref) const
             {
                 return mHash > ref.mHash;
             }
         
-            inline const bool operator==(const HString& ref) const
+            const bool operator==(const HString& ref) const
             {
                 return mHash == ref.mHash;
             }
         
-            inline const bool operator!=(const HString& ref) const
+            const bool operator!=(const HString& ref) const
             {
                 return mHash == ref.mHash;
             }
             
-            inline const char* c_str() const
+            const char* c_str() const
             {
                 return mHString.c_str();
             }
         
             ///Beware of returned reference !
-            inline const std::string& str()
+            const std::string& str()
             {
                 return mHString;
             }
             
-            inline const HString& operator+=(const HString& ref)
+            const HString& operator+=(const HString& ref)
             {
                 mHString+=ref.mHString;
                 mHash=str2hash(mHString);
@@ -135,13 +135,13 @@ namespace itc
             }
             
             // copy and copy - uneffective :(
-            inline HString operator+(const HString& ref)
+            HString operator+(const HString& ref)
             {
                 HString tmp(*this);
                 return (tmp+=ref);
             }
             
-            inline const bool less(const HString& ref) const
+            const bool less(const HString& ref) const
             {
                 if(mHash!=ref.mHash)
                 {
@@ -150,7 +150,7 @@ namespace itc
                 return false;
             }
         
-            inline const bool greater(const HString& ref) const
+            const bool greater(const HString& ref) const
             {
                 if(mHash!=ref.mHash)
                 {
@@ -160,7 +160,7 @@ namespace itc
             }
             
             // TODO: find faster way to make string chars uppercase
-            inline void toUpper()
+            void toUpper()
             {
                 std::string::size_type len=mHString.length();
                 for(std::string::size_type i=0;i<len;i++)
@@ -171,7 +171,7 @@ namespace itc
             }
             
             // TODO: find faster way to make string chars lowercase
-            inline void toLower()
+            void toLower()
             {
                 std::string::size_type len=mHString.length();
                 for(std::string::size_type i=0;i<len;i++)
