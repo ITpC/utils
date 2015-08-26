@@ -5,16 +5,10 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="include" displayName="include" projectFiles="true">
-        <logicalFolder name="abstract" displayName="abstract" projectFiles="true">
-          <itemPath>include/abstract/ILogFormatter.h</itemPath>
-          <itemPath>include/abstract/LoggerHelpers.h</itemPath>
-        </logicalFolder>
         <itemPath>include/Date.h</itemPath>
         <itemPath>include/File.h</itemPath>
         <itemPath>include/HString.h</itemPath>
         <itemPath>include/InterfaceCheck.h</itemPath>
-        <itemPath>include/Log.h</itemPath>
-        <itemPath>include/Logger.h</itemPath>
         <itemPath>include/PString.h</itemPath>
         <itemPath>include/RangedNumber.h</itemPath>
         <itemPath>include/Val2Type.h</itemPath>
@@ -61,19 +55,11 @@
       </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Log.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/Logger.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/PString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/abstract/ILogFormatter.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/abstract/LoggerHelpers.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/bdmap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -110,19 +96,11 @@
       </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Log.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/Logger.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/PString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/abstract/ILogFormatter.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/abstract/LoggerHelpers.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/bdmap.h" ex="false" tool="3" flavor2="0">
       </item>
