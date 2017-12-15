@@ -29,7 +29,7 @@ namespace itc
     		enum { value = val };
     	};
         
-       template <size_t val> struct SizeT2Type
+       template <std::size_t val> struct SizeT2Type
     	{
     		enum { value = val };
     	};
