@@ -1,4 +1,4 @@
 dist/
 build/
-netbeans/private/
+nbproject/private/
 private.xml
