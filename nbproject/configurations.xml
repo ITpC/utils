@@ -14,7 +14,6 @@
         <itemPath>include/Val2Type.h</itemPath>
         <itemPath>include/bdmap.h</itemPath>
         <itemPath>include/compat_types.h</itemPath>
-        <itemPath>include/fast_multimap.h</itemPath>
         <itemPath>include/missing.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -66,8 +65,6 @@
       </item>
       <item path="include/compat_types.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/fast_multimap.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/missing.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
@@ -108,8 +105,6 @@
       <item path="include/bdmap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/compat_types.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/fast_multimap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/missing.h" ex="false" tool="3" flavor2="0">
       </item>
