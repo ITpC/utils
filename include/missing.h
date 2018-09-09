@@ -36,179 +36,157 @@
 #include <string>
 #include <sstream>
 #include <ctype.h>
-#include <boost/regex.hpp>
 #include <exception>
 #include <stdexcept>
-#include <boost/shared_ptr.hpp>
-#include <boost/shared_array.hpp>
 
 namespace itc {
-    namespace utils {
-
-        //minimizes copieng, preallocate necessary heap at once.
-        //Do not iuse this function in your projects. This is a historical
-        //artifact, and stays here for compatibility with older projects.
-        //This function is deprecated, and will be obsolet soon.
-        static boost::shared_array<char> toUpper(const std::string& ref) {
-            std::string::size_type len = ref.length();
-            boost::shared_array<char> mArray(new char[len + 1]);
-            char* mArrayPtr = mArray.get();
-
-            for (std::string::size_type i = 0; i < len; i++) {
-                mArrayPtr[i] = (char) toupper(ref.c_str()[i]);
-            }
-            mArrayPtr[len] = 0;
-            return mArray;
-        }
-
-        //minimizes copieng, preallocate necessary heap at once.
-        //Do not iuse this function in your projects. This is a historical
-        //artifact, and stays here for compatibility with older projects.
-        //This function is deprecated, and will be obsolet soon.
-        static boost::shared_array<char> toLower(const std::string& ref) {
-            std::string::size_type len = ref.length();
-            boost::shared_array<char> mArray(new char[len + 1]);
-            char* mArrayPtr = mArray.get();
-
-            for (std::string::size_type i = 0; i < len; i++) {
-                mArrayPtr[i] = (char) tolower(ref.c_str()[i]);
-            }
-            mArrayPtr[len] = 0;
-            return mArray;
-        }
-
-        // std::regex has a bug with following regex in 4.8.3. An exception will
-        // be trown on application start. Repaced back with boost::regex 11.12.2014
-        const boost::regex aNumRegEx(
-                std::string("^[-]?[0-9]*[.]?[0-9]+([eE][+-][0-9]+)?$"),
-                boost::regex::egrep
-        );
-
-        const boost::regex anIntRegEx(
-                std::string("^[-]?[0-9]*$"),
-                boost::regex::egrep
-        );
-
-        const boost::regex aHexRegEx(
-                std::string("^[0-9a-fA-F]*$"),
-                boost::regex::egrep
-        );
-        
-        static const bool isnumber(const std::string& str) 
+  namespace utils {
+    
+    auto toupper(const std::string& str)
+    {
+      std::string out;
+      std::for_each(
+        str.begin(),str.end(),
+        [&out](const auto& ch)
         {
-            if (boost::regex_match(str, aNumRegEx)) {
-                return true;
-            }
-            return false;
+          out.append(1,static_cast<char>(std::toupper(static_cast<unsigned char>(ch))));
         }
-
-        static const bool ishex(const std::string& str) 
-        {
-            if (boost::regex_match(str, aHexRegEx)) {
-                return true;
-            }
-            return false;
-        }
-
-        static const bool isint(const std::string& str) 
-        {
-            if (boost::regex_match(str, anIntRegEx)) {
-                return true;
-            }
-            return false;
-        }
-        
-        static double s2double(const std::string& ref) {
-            std::istringstream aConverter(ref);
-            double ret;
-            aConverter >> ret;
-            return ret;
-        }
-
-        static float s2float(const std::string& ref) {
-            std::istringstream aConverter(ref);
-            float ret;
-            aConverter >> ret;
-            return ret;
-        }
-
-        static long s2long(const std::string& ref) {
-            std::istringstream aConverter(ref);
-            long ret;
-            aConverter >> ret;
-            return ret;
-        }
-
-        static int s2int(const std::string& ref) {
-            std::istringstream aConverter(ref);
-            int ret;
-            aConverter >> ret;
-            return ret;
-        }
-
-        static unsigned s2uint(const std::string& ref) {
-            std::istringstream aConverter(ref);
-            unsigned ret;
-            aConverter >> ret;
-            return ret;
-        }
-
-        template <typename T> T str2number(const std::string& ref)
-        {
-            std::istringstream aConverter(ref);
-            T ret;
-            aConverter >> ret;
-            return ret;            
-        }
-        
-        static long long s2dlong(const std::string& ref) {
-            std::istringstream aConverter(ref);
-            long long ret;
-            aConverter >> ret;
-            return ret;
-        }
-
-        static std::string num2s(const int val) {
-            std::ostringstream aConverter;
-            if (aConverter << val) {
-                return aConverter.str();
-            }
-            throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const int&)");
-        }
-
-        static std::string num2s(const unsigned val) {
-            std::ostringstream aConverter;
-            if (aConverter << val) {
-                return aConverter.str();
-            }
-            throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const unsigned&)");
-        }
-
-        static std::string num2s(const float val) {
-            std::ostringstream aConverter;
-            if (aConverter << val) {
-                return aConverter.str();
-            }
-            throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const float&)");
-        }
-
-        static std::string num2s(const double val) {
-            std::ostringstream aConverter;
-            if (aConverter << val) {
-                return aConverter.str();
-            }
-            throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const double&)");
-        }
-
-        static std::string num2s(const long long val) {
-            std::ostringstream aConverter;
-            if (aConverter << val) {
-                return aConverter.str();
-            }
-            throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const long long&)");
-        }
-
+      );
+      return out;
     }
+    /*
+    // std::regex has a bug with following regex in 4.8.3. An exception will
+    // be trown on application start. Repaced back with boost::regex 11.12.2014
+    const boost::regex aNumRegEx(
+            std::string("^[-]?[0-9]*[.]?[0-9]+([eE][+-][0-9]+)?$"),
+            boost::regex::egrep
+    );
+
+    const boost::regex anIntRegEx(
+            std::string("^[-]?[0-9]*$"),
+            boost::regex::egrep
+    );
+
+    const boost::regex aHexRegEx(
+            std::string("^[0-9a-fA-F]*$"),
+            boost::regex::egrep
+    );
+
+    static const bool isnumber(const std::string& str) 
+    {
+        if (boost::regex_match(str, aNumRegEx)) {
+            return true;
+        }
+        return false;
+    }
+
+    static const bool ishex(const std::string& str) 
+    {
+        if (boost::regex_match(str, aHexRegEx)) {
+            return true;
+        }
+        return false;
+    }
+
+    static const bool isint(const std::string& str) 
+    {
+        if (boost::regex_match(str, anIntRegEx)) {
+            return true;
+        }
+        return false;
+    }
+
+    static double s2double(const std::string& ref) {
+        std::istringstream aConverter(ref);
+        double ret;
+        aConverter >> ret;
+        return ret;
+    }
+
+    static float s2float(const std::string& ref) {
+        std::istringstream aConverter(ref);
+        float ret;
+        aConverter >> ret;
+        return ret;
+    }
+
+    static long s2long(const std::string& ref) {
+        std::istringstream aConverter(ref);
+        long ret;
+        aConverter >> ret;
+        return ret;
+    }
+
+    static int s2int(const std::string& ref) {
+        std::istringstream aConverter(ref);
+        int ret;
+        aConverter >> ret;
+        return ret;
+    }
+
+    static unsigned s2uint(const std::string& ref) {
+        std::istringstream aConverter(ref);
+        unsigned ret;
+        aConverter >> ret;
+        return ret;
+    }
+
+    template <typename T> T str2number(const std::string& ref)
+    {
+        std::istringstream aConverter(ref);
+        T ret;
+        aConverter >> ret;
+        return ret;            
+    }
+
+    static long long s2dlong(const std::string& ref) {
+        std::istringstream aConverter(ref);
+        long long ret;
+        aConverter >> ret;
+        return ret;
+    }
+
+    static std::string num2s(const int val) {
+        std::ostringstream aConverter;
+        if (aConverter << val) {
+            return aConverter.str();
+        }
+        throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const int&)");
+    }
+
+    static std::string num2s(const unsigned val) {
+        std::ostringstream aConverter;
+        if (aConverter << val) {
+            return aConverter.str();
+        }
+        throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const unsigned&)");
+    }
+
+    static std::string num2s(const float val) {
+        std::ostringstream aConverter;
+        if (aConverter << val) {
+            return aConverter.str();
+        }
+        throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const float&)");
+    }
+
+    static std::string num2s(const double val) {
+        std::ostringstream aConverter;
+        if (aConverter << val) {
+            return aConverter.str();
+        }
+        throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const double&)");
+    }
+
+    static std::string num2s(const long long val) {
+        std::ostringstream aConverter;
+        if (aConverter << val) {
+            return aConverter.str();
+        }
+        throw std::runtime_error("Conversion to string is failed in itc::utils::num2s(const long long&)");
+    }
+    */
+  }
 }
 
 #if defined (__MINGW32__) || defined (__CYGWIN__)
@@ -261,14 +239,14 @@ char *strndup(const char *s, size_t n) {
 }
 #endif
 
-static char* itoa(const int i) {
+const char* itoa(const int i) {
     static char buff[21];
     memset(buff, 0, 21);
     snprintf(buff, 20, "%d", i);
     return buff;
 }
 
-static char* ftoa(const float i) {
+const char* ftoa(const float i) {
     static char buff[33];
     memset(buff, 0, 33);
     snprintf(buff, 32, "%f", i);
