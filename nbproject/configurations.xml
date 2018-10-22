@@ -9,7 +9,6 @@
         <itemPath>include/File.h</itemPath>
         <itemPath>include/HString.h</itemPath>
         <itemPath>include/InterfaceCheck.h</itemPath>
-        <itemPath>include/PString.h</itemPath>
         <itemPath>include/RangedNumber.h</itemPath>
         <itemPath>include/Val2Type.h</itemPath>
         <itemPath>include/bdmap.h</itemPath>
@@ -55,8 +54,6 @@
       </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/PString.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
@@ -95,8 +92,6 @@
       <item path="include/HString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/PString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/RangedNumber.h" ex="false" tool="3" flavor2="0">
       </item>
