@@ -54,6 +54,18 @@ namespace itc {
       );
       return out;
     }
+    auto tolower(const std::string& str)
+    {
+      std::string out;
+      std::for_each(
+        str.begin(),str.end(),
+        [&out](const auto& ch)
+        {
+          out.append(1,static_cast<char>(std::tolower(static_cast<unsigned char>(ch))));
+        }
+      );
+      return out;
+    }
   }
 }
 
