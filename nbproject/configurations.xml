@@ -5,8 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="include" displayName="include" projectFiles="true">
-        <itemPath>include/Date.h</itemPath>
-        <itemPath>include/File.h</itemPath>
         <itemPath>include/InterfaceCheck.h</itemPath>
         <itemPath>include/Val2Type.h</itemPath>
         <itemPath>include/classEnumCasts.h</itemPath>
@@ -44,10 +42,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="include/Date.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/File.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
@@ -81,10 +75,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="include/Date.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/File.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/InterfaceCheck.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Val2Type.h" ex="false" tool="3" flavor2="0">
